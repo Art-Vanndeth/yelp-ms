@@ -1,0 +1,5 @@
+business:
+  info:
+    name: "business"
+    version: "1.0.0"
+    description: "business service Default Application"

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active:
+      - native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///Users/vanndeth/Documents/CSTAD/Spring Micro/YelpMS/Config/service/business
+          add-label-locations: false
+
