@@ -1,73 +1,106 @@
 package dev.dcoder.business.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.List;
+
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "businesses")
 public class Business {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String alias;
 
-    @Column(length = 1000)
-    private String description;
+    @Column(unique = true, nullable = false)
+    private String username;
 
-    @Column(nullable = false)
-    private String address;
+    @Column(unique = true, nullable = false, columnDefinition = "TEXT")
+    private String brand;
 
-    @Column(nullable = false)
-    private String city;
+    @Column(unique = true, columnDefinition = "TEXT")
+    private String customBrand;
 
-    @Column(nullable = false)
-    private String state;
+    private String logo;
+    private String cover;
+    private String thumbnail;
 
-    @Column(nullable = false)
-    private String zipCode;
+    @Column(columnDefinition = "TEXT")
+    private String about;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false, length = 30)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @ManyToOne
+    private Country country;
+
+    @ManyToOne
+    private City city;
+
+    @Column(columnDefinition = "TEXT")
+    private String address1;
+
+    @Column(columnDefinition = "TEXT")
+    private String address2;
+
+    @Column(columnDefinition = "TEXT")
+    private String address3;
+
+    @Column(nullable = false, length = 32)
+    private String zipCode;
+
+    private Boolean isOpening24Hours;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<OpeningHour> openingHours;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<AdditionalInformation> additionalInformation;
+
+    @ManyToMany
+    @JoinTable(
+            name = "businesses_categories",
+            joinColumns = @JoinColumn(name = "business_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
+
+    @Column(unique = true, length = 150)
+    private String website;
+
+    @Column(unique = true, nullable = false, length = 100)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private BusinessCategory category;
+    private Boolean isClaimed;
+    private Boolean isClosed;
+    private Boolean isApproved;
+    private Boolean isSearchable;
+    private String googleMap;
+    private Double price;
 
     @Column(precision = 10, scale = 6)
-    private BigDecimal latitude;
+    private Double latitude;
 
     @Column(precision = 10, scale = 6)
-    private BigDecimal longitude;
+    private Double longitude;
 
-    @Column(nullable = false)
-    private Double rating;
+    @ManyToMany
+    @JoinTable(
+            name = "businesses_transactions",
+            joinColumns = @JoinColumn(name = "business_id"),
+            inverseJoinColumns = @JoinColumn(name = "transaction_id"))
+    private List<Transaction> transactions;
 
-    @Column(nullable = false)
-    private Integer reviewCount;
 
-    @Column(nullable = false)
-    private Boolean isOpen;
 
-    private String websiteUrl;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
-    public enum BusinessCategory {
-        RESTAURANT, CAFE, BAR, SHOP, SERVICE, ENTERTAINMENT, HOTEL
-    }
 }
