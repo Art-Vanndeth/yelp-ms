@@ -2,4 +2,4 @@ business:
   info:
     name: "business"
     version: "1.0.0"
-    description: "business service Prod"
+    description: "business service Production"
